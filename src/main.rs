@@ -2,6 +2,7 @@ use dialoguer::{console::Term, theme::ColorfulTheme, Select};
 
 // Internal crates
 mod data;
+mod db;
 mod utils;
 use data::{selection_display::SelectionDisplay, task_manager::TaskManager};
 fn main() -> std::io::Result<()> {
@@ -9,7 +10,6 @@ fn main() -> std::io::Result<()> {
     task_manager.load_persisted_tasks();
     loop {
         // Main loop until user selects Quit option
-
         let mut selection_options: Vec<SelectionDisplay> = vec![];
         utils::add_display_tasks(&task_manager, &mut selection_options);
         utils::append_default_list_options(&mut selection_options);
@@ -39,7 +39,7 @@ fn main() -> std::io::Result<()> {
             SelectionDisplay::Quit => break,
         };
     }
-    // Clean up before graceful exit
-    task_manager.save_all_tasks()?;
+    // Automatically save tasks when program gracefully exits.
+    task_manager.save_all_tasks().unwrap();
     Ok(())
 }

@@ -1,5 +1,7 @@
 use std::collections::{HashSet, LinkedList};
 
+use crate::db::DBHelper;
+
 #[derive(Clone, Hash, PartialEq, Eq, Debug)]
 pub struct Task {
     pub complete: bool,
@@ -16,11 +18,13 @@ impl Task {
 }
 pub struct TaskManager {
     tasks: HashSet<Task>,
+    db: DBHelper,
 }
 impl TaskManager {
     pub fn new() -> Self {
         Self {
             tasks: HashSet::new(),
+            db: DBHelper::default(),
         }
     }
 
@@ -29,7 +33,6 @@ impl TaskManager {
     /// This does not persist the task.
     pub fn add_new_task(&mut self, task_details: &str) {
         let new_task = Task::new(task_details);
-        self.save_task(&new_task).expect("Error saving task!");
         self.tasks.insert(new_task);
     }
 
@@ -46,6 +49,7 @@ impl TaskManager {
     /// Deletes all completed tasks.
     pub fn remove_completed_tasks(&mut self) {
         self.tasks.retain(|task| !task.complete);
+        self.db.delete_completed_tasks().unwrap();
     }
 
     /// Gets list of tasks, with incomplete items listed before completed items.
@@ -63,40 +67,31 @@ impl TaskManager {
     }
 
     /// Loads list of To-Do tasks saved from previous sessions.
-    ///
-    /// TODO need to integrate with persistence layer (sqlite3)
     pub fn load_persisted_tasks(&mut self) {
-        if let Ok(tasks) = mock_load_tasks() {
+        if let Ok(tasks) = self.db.load_tasks() {
             self.tasks = tasks;
         }
     }
 
     /// Saves a single task to disk.
+    ///
     /// Will overwrite existing task data if the completion state has since changed.
     ///
-    /// TODO need to integrate with persistence layer (sqlite3)
-    pub fn save_task(&self, _task: &Task) -> Result<(), std::io::Error> {
-        // TODO
-        Ok(())
+    /// Not yet utilized.
+    pub fn _save_task(&self, task: &Task) -> Result<(), sqlite::Error> {
+        self.db.insert_task(task)
     }
 
     /// Takes the current list of tasks and saves them all to disk.
-    /// This function will overwrite all existing saved tasks.
     ///
-    /// TODO need to integrate with persistence layer (sqlite3)
-    pub fn save_all_tasks(&self) -> Result<(), std::io::Error> {
-        // TODO
-        Ok(())
+    /// This function will overwrite all existing saved tasks.
+    pub fn save_all_tasks(&self) -> Result<(), sqlite::Error> {
+        self.db.insert_tasks(&self.tasks)
     }
 }
 
-/// Mock function for loading persistent tasks.
-///
-/// TODO remove with persistence impl (sqlite3)
-fn mock_load_tasks() -> Result<HashSet<Task>, String> {
-    Ok(HashSet::new())
-}
-
+// Currently all tests here need to be run consequtively (`cargo test -- --test-threads=1`) because the DB operations
+// always happen on the same DB file. This should eventually be refactored so that the tests operate on separate files.
 #[cfg(test)]
 mod tests {
     use super::{Task, TaskManager};
