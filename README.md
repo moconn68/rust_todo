@@ -1,8 +1,17 @@
 # rust_todo: A Simple Rust CLI To-Do List Tool 📝
 
+## Disclaimer ⚠️
+
+This tool is written as a hobby project for the purpose of my Rust learning and is not intended to be used at scale in a production environment. I make no guarantees about the functionality or security of this software.
+
 ## About ℹ️
 
 This is a simple CLI application that acts as a To-Do list manager. I created this as my first Rust project in order to learn the basics of the language as well as work through best-practices such as project structure and testing.
+
+## Features 🔔
+- Add items to a to-do list which can be scrolled through and selected to toggle completion status
+- Option to clear all items marked as complete
+- Tasks are automatically saved to a local database for reference in subsequent progrma executions
 
 ## Usage 🛠️
 
@@ -12,7 +21,7 @@ In order to run this project, you will need the Rust programming language instal
 
 ### Installation ⚙️
 
-1. Download this project via Git: `TODO`
+1. Download this project via Git: `git clone https://github.com/moconn68/rust_todo.git`
 2. In the root directory, execute the command `cargo run` in your terminal.
 
 - Alternatively, if you'd like to build a standalone executable to run anywhere without building with
@@ -22,4 +31,6 @@ In order to run this project, you will need the Rust programming language instal
 
 ## Software used 👨‍💻
 
-This project leverages the Rust programming language including it's robust toolchain. In addition, the open-source [`dialoguer`](https://crates.io/crates/dialoguer) crate is used to provide a simple API for CLI application development, which this project uses for the main selection list and accepting user input for creating new tasks.
+This project leverages the Rust programming language including it's robust toolchain. In addition, the following open-source dependencies are utilized:
+- [`dialoguer`](https://crates.io/crates/dialoguer): provides a simple API for CLI application development
+- [`sqlite`](https://crates.io/crates/sqlite): Rust implementation of the sqlite3 file-based SQL database
