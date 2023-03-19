@@ -1,9 +1,5 @@
 # rust_todo: A Simple Rust CLI To-Do List Tool 📝
 
-## Disclaimer ⚠️
-
-This tool is written as a hobby project for the purpose of my Rust learning and is not intended to be used at scale in a production environment. I make no guarantees about the functionality or security of this software.
-
 ## About ℹ️
 
 This is a simple CLI application that acts as a To-Do list manager. I created this as my first Rust project in order to learn the basics of the language as well as work through best-practices such as project structure and testing.
